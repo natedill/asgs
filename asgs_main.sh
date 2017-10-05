@@ -561,6 +561,19 @@ downloadCycloneData()
           fi
           newAdvisory="true"
        fi
+#nld hack to make sure other user's instance is finished before moving on
+       if [[ $newAdvisory = true ]]; then
+          # default to false so we err on the side of not submitting the job to early
+          newAdvisory="false"
+          logMessage "$THIS: we got new advisory, but not sure if we can submitt yet, checking if hsofs is done"
+          # check for the file
+          #if [ -f /corral-tacc/utexas/hurricane/ASGS/2017/tc/irma/$newAdvisoryNum/hsofs/lonestar.tacc.utexas.edu/irmahsofsx/veerRight50/run.properties ]; then
+          if [ -f /scratch/02060/natedill/asgs45891/$newAdvisoryNum/nowcast/maxele.63 ]; then
+             newAdvisory="true"
+             logMessage "$THIS: hsfosf last member is done, we can submit"
+          fi 
+       fi
+#end hack
        if [[ $newAdvisory = false ]]; then
           sleep 60 # we are hotstarting, the advisory is same as last one
        fi
